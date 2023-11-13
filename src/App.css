@@ -76,13 +76,12 @@ header {
 
 
 .content {
-  transition: margin-left 0.5s;
 
 }
 
 .content-visible {
   margin-left: 260px; /* or the width of your sidebar */
-  width: 100%;
+  width: calc(100% - 200px); /* Adjust 200px to your sidebar width */
 }
 
 
