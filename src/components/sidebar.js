@@ -33,7 +33,7 @@ const Sidebar = ({ show }) => {
           </a>
         </li>
         <li>
-          <li style={{color:'#484444'}}>
+          <li style={{color:'#484444' , marginLeft:'10px'}}>
             SETTINGS
           </li>
           <ul className="settings-submenu">

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { GoSearch } from "react-icons/go";
 import { MdModeEditOutline} from "react-icons/md";
 import { MdNotInterested} from "react-icons/md";
@@ -8,6 +8,7 @@ import { BsThreeDotsVertical} from "react-icons/bs";
 import { BiSolidDownload} from "react-icons/bi";
 import { BiPlus} from "react-icons/bi";
 import { TiTick } from "react-icons/ti";
+import axios from 'axios';
 
 
 
@@ -89,15 +90,17 @@ const handleStatusChange = (index, event) => {
 };
 
 const getCircleColor = (name) => {
+  if (!name || typeof name !== 'string' || name.length === 0) {
+    // Return a default color or handle this case based on your requirements
+    return '#999999';
+  }
+
   const colors = ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6', '#E6B333', '#3366E6', '#999966'];
-  const initial = name.charCodeAt(0) + name.charCodeAt(1);
+  const initial = name.charCodeAt(0) + (name.length > 1 ? name.charCodeAt(1) : 0);
   return colors[initial % colors.length];
 };
 
-
 const [users, setUsers] = useState([]);
-
-
 const [showAddUserScreen, setShowAddUserScreen] = useState(false);
 const [newUserName, setNewUserName] = useState('');
 const [newUserUsername, setNewUserUsername] = useState('');
@@ -105,25 +108,46 @@ const [newUserEmail, setNewUserEmail] = useState('');
 const [newUserGroup, setNewUserGroup] = useState('');
 const [newUserStatus, setNewUserStatus] = useState('');
 
+
+useEffect(() => {
+  console.log("Fetching user data...");
+  axios.get('http://localhost:5000/users/get-users')
+    .then(response => {
+      console.log("User data:", response.data);
+      setUsers(response.data);
+    })
+    .catch(error => {
+      console.error('Error fetching user data:', error);
+    });
+}, []);
+
+
 const handleAddUser = () => {
   const newUser = {
-    name: newUserName,
-    username: newUserUsername,
-    email: newUserEmail,
-    group: newUserGroup,
-    status: newUserStatus,
+    newUserName,
+    newUserUsername,
+    newUserEmail,
+  newUserGroup,
+    newUserStatus,
     createdOn: new Date().toLocaleDateString()
   };
 
-  setUsers([...users, newUser]);
+  // Use Axios to send a POST request to your server to add a new user
+  axios.post('http://localhost:5000/users/add-user', newUser)
+    .then(response => {
+      // Update the local state with the new user
+      setUsers([...users, response.data]);
+    })
+    .catch(error => {
+      console.error('Error adding new user:', error);
+    });
 
-
+  // Clear the input fields and close the add user screen
   setNewUserName('');
   setNewUserUsername('');
   setNewUserEmail('');
   setNewUserGroup('');
   setNewUserStatus('');
-
   setShowAddUserScreen(false);
 };
 
@@ -135,9 +159,10 @@ const handleAddUser = () => {
       className={` content content-container ${
         showSidebar ? "hidden" : "visible"
       }`}
-      style={{ background: "#f2f4f8" }}
+      
     >
-      <div class="container">
+      <div class="container" style={{   backgroundColor: "#f2f4f8"
+    }}>
         <div style={{ display: "flex", alignItems: "center" }}>
           <h1 className="fw-bold">User Management</h1>
           <button className="userbtn" onClick={() => setShowAddUserScreen(true)}>
@@ -155,13 +180,13 @@ const handleAddUser = () => {
 
 
 
-        <div class="table-responsive custom-table-responsive">
+        <div class="table-responsive custom-table-responsive" >
           
-          <div style={{ border: "2px solid #ccc",paddingLeft:'50px',paddingTop:'30px',paddingBottom:'30px',background: "#ffffff",borderRadius: "15px",}}>
+          <div style={{ border: "2px solid #ccc",paddingTop:'30px',paddingBottom:'30px',background: "#ffffff",borderRadius: "15px",}}>
 
 
 
-          <div style={{ display: "flex" }}>
+          <div style={{ display: "flex" , marginLeft:'20px' }}>
 
           <div style={{ border: "1px solid #ccc", borderRadius: "8px", display: "flex" ,width:'300px' , height:'40px'}}>
               <input type="text" placeholder="Search.." style={{ border: "none", outline: "none", padding: "5px 10px" ,    margin: "0 20px", fontSize: 17}} />
@@ -175,7 +200,7 @@ const handleAddUser = () => {
         
           <div style={{ position: "relative" }}>
         <div style={{ position: "absolute", top: "-12px", background: "#fff", paddingLeft: "30px" ,color:'rgb(117 117 117)'}}>
-            Select User
+            User Status
         </div>
         <div style={{ border: "1px solid #ccc", borderRadius: "8px", width: '200px', height:'40px',  marginLeft: "20px" }}>
             <select style={{ border: "none", outline: "none", padding: "5px 10px", fontSize: 16, width: '100%', height: '100%' }}>
@@ -211,7 +236,7 @@ const handleAddUser = () => {
 
 
 
-      <div style={{ display: "flex" , marginTop:'40px',}}>
+   < div style={{ display: "flex" , marginTop:'40px',position:'relative'  , marginLeft:'20px'}}>
 
 
 
@@ -235,7 +260,7 @@ const handleAddUser = () => {
         <p style={{ margin: 'auto' , color:'black'  , fontWeight:'bold'}}>Assign to Profile</p>
       </div>
       <div style={{ backgroundColor: '#e7e9ef', marginLeft: '13px', opacity: '0.7', borderRadius: '5px', display: 'flex', width: '200px', height: '42px' }}>
-        <p style={{ margin: 'auto' , color:'black'  , fontWeight:'bold'}}>Assign to Groupe</p>
+        <p style={{ margin: 'auto' , color:'black'  , fontWeight:'bold'}}>Assign to Group</p>
       </div>
 
 
@@ -253,9 +278,10 @@ const handleAddUser = () => {
         </div>
 
 
-      <div style={{ backgroundColor: '#e7e9ef', marginLeft: '450px', opacity: '0.7', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '45px', height: '42px' }}>
-        < BiSolidDownload style={{ fontSize: '24px', fontWeight: 'bold' }} />
-      </div> 
+        <div style={{ position: 'absolute', backgroundColor: '#e7e9ef', left: '95%', transform: 'translateX(-50%)', opacity: '0.7', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '45px', height: '42px' }}>
+    <BiSolidDownload style={{ fontSize: '24px', fontWeight: 'bold' }} />
+</div>
+
 
     
 
@@ -263,20 +289,20 @@ const handleAddUser = () => {
 
 
 
-            <table className="table custom-table" style={{paddingTop:'40px'}} >
-              <thead>
+            <table className="table custom-table" >
+            <thead style={{backgroundColor: "#f2f4f8" , height:'60px'}}>
                 <tr >
-                  <th scope="col">
-                    <label class="control control--checkbox">
+                  <th scope="col" style={{ width:'50px'}} >
+                    <label class="control control--checkbox" style={{ marginLeft:'15px'}}>
                       <input type="checkbox" class="js-check-all" />
                       <div class="control__indicator"></div>
                     </label>
                   </th>
 
-                  <th scope="col">Name</th>
+                  <th scope="col" style={{paddingLeft:'10px'}}>Name</th>
                   <th scope="col">User Name</th>
                   <th scope="col">Email Address</th>
-                  <th scope="col">Groupe</th>
+                  <th scope="col" style={{textAlign:'center'}}>Group</th>
                   <th scope="col">Status</th>
                   <th scope="col">Created on</th>
                 </tr>
@@ -288,7 +314,7 @@ const handleAddUser = () => {
 
                 <><tr key={index}>
                   <th scope="row">
-                  <label className="control control--checkbox">
+                  <label className="control control--checkbox" style={{ marginLeft:'15px'}}>
           <input type="checkbox" onChange={() => handleCheckboxChange(index)} />
           <div className="control__indicator">
             {user.checked && <TiTick style={{ fontSize: "20px", color: "white" }} />}
@@ -296,19 +322,19 @@ const handleAddUser = () => {
         </label>
                   </th>
                   <td>
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                      <div class="userCircle" style={{ backgroundColor: getCircleColor(user.name) }}>
-                        {getInitials(user.name)}
+                    <div style={{ display: "flex", alignItems: "center"  , paddingLeft:'10px'}}>
+                      <div class="userCircle" style={{ backgroundColor: getCircleColor(user.newUserName) }}>
+                        {getInitials(user.newUserName)}
                       </div>
-                      <p style={{ marginLeft: "10px", color: 'black' }}>{user.name}</p>
+                      <p style={{ marginLeft: "10px", color: 'black' }}>{user.newUserName}</p>
                     </div>
                   </td>
-                  <td>{user.username}</td>
-              <td>{user.email}</td>
-              <td>{user.group}</td>
+                  <td>{user.newUserUsername}</td>
+              <td>{user.newUserEmail}</td>
+              <td style={{textAlign:'center'}}>{user.newUserGroup}</td>
 
                   <td>
-                     <select value={user.status}     onChange={(e) => handleStatusChange(index, e)} style={{ border: 'none', outline: 'none', width: '100%', background: 'transparent' }}>
+                     <select value={user.newUserStatus}     onChange={(e) => handleStatusChange(index, e)} style={{ border: 'none', outline: 'none', width: '100%', background: 'transparent' }}>
                      <option value="Active">Active</option>
                       <option value="Inactive">Inactive</option>
                       <option value="Blocked">Blocked</option>
@@ -316,9 +342,8 @@ const handleAddUser = () => {
                   </td>
 
                 <td>{user.createdOn}</td>
-                </tr><tr class="spacer">
-                    <td colspan="100"></td>
-                  </tr>
+                </tr>
+              
                   </>
               ))}
               </tbody>
