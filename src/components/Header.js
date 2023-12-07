@@ -60,9 +60,13 @@ function Header({ onToggleNav, showSidebar }) {
   };
 
   return (
-    <header className={`header-container ${showSidebar ? "hidden" : "visible"}`} style={{ borderBottom: "1px solid #ccc" }}>
-      <IoIosArrowBack onClick={onToggleNav} className="arrow" />
-      <GiHamburgerMenu onClick={onToggleNav} className="burger" />
+    <header className={`header-container ${showSidebar ? "hidden" : "visible"}`} style={{ borderBottom: "1px solid #ccc", position:"relative" }}>
+    <div  >
+      <IoIosArrowBack onClick={onToggleNav} className={`arrow ${showSidebar ? "hidden" : "visible"}`} />
+      <GiHamburgerMenu onClick={onToggleNav}  className={`burger ${showSidebar ? "hidden" : "visible"}`} />
+      </div>
+    <div style={{ display: "contents"}}    >
+    
       <div className="left-section">
         <h4 >Good Morning!</h4>
         <div className="date-time" style={{marginLeft:'5px'}}>
@@ -83,6 +87,7 @@ function Header({ onToggleNav, showSidebar }) {
                   </div>
         </div> 
                 <MdKeyboardArrowDown  style={{fontSize: '24px', fontWeight: 'bold' ,marginTop:'4px' }}/>
+      </div>
       </div>
     </header>
   );

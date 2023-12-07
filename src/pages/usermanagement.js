@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+
 import { GoSearch } from "react-icons/go";
 import { MdModeEditOutline} from "react-icons/md";
 import { MdNotInterested} from "react-icons/md";
@@ -182,61 +183,62 @@ const handleAddUser = () => {
 
         <div class="table-responsive custom-table-responsive" >
           
-          <div style={{ border: "2px solid #ccc",paddingTop:'30px',paddingBottom:'30px',background: "#ffffff",borderRadius: "15px",}}>
+          <div style={{ border: "2px solid #ccc",paddingTop:'30px',paddingBottom:'30px',background: "#ffffff",borderRadius: "15px",}} className="resp1">
 
 
 
-          <div style={{ display: "flex" , marginLeft:'20px' }}>
 
-          <div style={{ border: "1px solid #ccc", borderRadius: "8px", display: "flex" ,width:'300px' , height:'40px'}}>
-              <input type="text" placeholder="Search.." style={{ border: "none", outline: "none", padding: "5px 10px" ,    margin: "0 20px", fontSize: 17}} />
-              <GoSearch style={{ fontSize: 19, marginLeft: -268, color: "#999", marginTop:11 }} />
-          </div>
 
-          <div style={{ border: "1px solid #ccc", borderRadius: "8px" ,width:'150px' , height:'40px',      marginLeft: "20px"}}>
-              <input type="text" placeholder="User Name" style={{ border: "none", outline: "none", paddingLeft: 25 ,paddingTop:12,  fontSize: 16}} />
-          </div>
 
-        
-          <div style={{ position: "relative" }}>
-        <div style={{ position: "absolute", top: "-12px", background: "#fff", paddingLeft: "30px" ,color:'rgb(117 117 117)'}}>
-            User Status
-        </div>
-        <div style={{ border: "1px solid #ccc", borderRadius: "8px", width: '200px', height:'40px',  marginLeft: "20px" }}>
-            <select style={{ border: "none", outline: "none", padding: "5px 10px", fontSize: 16, width: '100%', height: '100%' }}>
-                <option value="user1">Any</option>
-                <option value="user2">Office</option>
-                <option value="user3">Managers</option>
-                <option value="user3">Head Office</option>
 
-                {/* Add more options as needed */}
-            </select>
-        </div>
+<div style={{  display: "flex", marginLeft: '20px', flexDirection: "row", flexWrap: "wrap" }} >
+  <div style={{ position:"relative",border: "1px solid #ccc", borderRadius: "8px", marginRight: "10px", marginBottom: "10px", width: '300px', height: '40px' }}>
+    <input type="text" placeholder="Search.." style={{position:"absolute", backgroundColor: "transparent",border: "none", outline: "none", padding: "10px 25px", fontSize: 17 }} />
+    <GoSearch style={{ position:"absolute",fontSize: 19, color: "#999", top:"50%",transform:"translateY(-50%)" }} />
+  </div>
+
+  <div style={{ border: "1px solid #ccc", borderRadius: "8px", marginRight: "10px", marginBottom: "10px", width: '150px', height: '40px' }}>
+    <input type="text" placeholder="User Name" style={{ backgroundColor: "transparent",border: "none", outline: "none", paddingLeft: 25, paddingTop: 12, fontSize: 16 }} />
+  </div>
+
+  <div style={{ position: "relative", marginRight: "10px", marginBottom: "10px" }} className="userstate">
+    <div style={{ position: "absolute", top: "-8px", background: "#fff", paddingLeft: "19px", color: 'rgb(117 117 117)',width:"94px", height:"10px" }}>
+      User Status
     </div>
-
-
-    <div style={{ position: "relative" }}>
-        <div style={{ position: "absolute", top: "-12px", background: "#fff", paddingLeft: "30px" ,color:'rgb(117 117 117)'}}>
-              Creation Date
-         </div>
-        <div style={{ border: "1px solid #ccc", borderRadius: "8px", width: '200px', height:'40px',  marginLeft: "20px" }}>
-        <input type="date" style={{ border: "none", outline: "none", padding: "5px 10px", fontSize: 16, width: '100%', height: '100%' }} />
-
-        </div>
+    <div style={{ border: "1px solid #ccc", borderRadius: "8px", width: '200px', height: '40px' }}>
+      <select style={{ backgroundColor: "transparent",border: "none", outline: "none", padding: "5px 10px", fontSize: 16, width: '100%', height: '100%' }}>
+        <option value="user1">Any</option>
+        <option value="user2">Office</option>
+        <option value="user3">Managers</option>
+        <option value="user3">Head Office</option>
+        {/* Add more options as needed */}
+      </select>
     </div>
+  </div>
 
-
-
-    <div style={{ marginLeft:'20px', marginTop:'10px' , color:'blue', fontSize:'18px'}}>
-              All Filters
+  <div style={{ position: "relative", marginRight: "10px", marginBottom: "10px" }} className="date">
+    <div style={{ position: "absolute", top: "-8px", background: "#fff", paddingLeft: "19px", color: 'rgb(117 117 117)',width:"104px", height:"10px"}}>
+      Creation Date
     </div>
+    <div style={{ border: "1px solid #ccc", borderRadius: "8px", width: '172px', height: '40px' }}>
+      <input type="date" style={{ backgroundColor: "transparent",border: "none", outline: "none", padding: "5px 10px", fontSize: 16, height: '100%' }} />
+    </div>
+  </div>
 
+  <div style={{ marginLeft: '20px', marginTop: '10px', color: 'blue', fontSize: '18px' }}>
+    All Filters
+  </div>
 </div>
 
 
 
 
-   < div style={{ display: "flex" , marginTop:'40px',position:'relative'  , marginLeft:'20px'}}>
+
+
+
+
+
+   < div style={{ display: "flex" , flexDirection: "row", flexWrap: "wrap",marginTop:'40px',position:'relative'  , marginLeft:'20px'}}>
 
 
 
@@ -244,33 +246,33 @@ const handleAddUser = () => {
 
      <div style={{ borderLeft: '1.5px solid rgb(221 211 211)', height: '35px', marginLeft:'15px' ,marginTop:'3px'}}></div>
 
-      <div style={{ backgroundColor: '#e7e9ef', marginLeft: '20px', opacity: '0.7', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '45px', height: '42px' }}>
+      <div  className=" iconresponsive" style={{ backgroundColor: '#e7e9ef', marginLeft: '20px', opacity: '0.7', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '45px', height: '42px' }}>
         <MdModeEditOutline style={{ fontSize: '24px', fontWeight: 'bold' }}/>
       </div>
 
-      <div style={{ backgroundColor: '#e7e9ef', marginLeft: '13px', opacity: '0.7', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '45px', height: '42px' }}>
+      <div  className=" iconresponsive" style={{ backgroundColor: '#e7e9ef', marginLeft: '13px', opacity: '0.7', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '45px', height: '42px' }}>
         <MdNotInterested style={{ fontSize: '24px', fontWeight: 'bold' }}/>
       </div>
   
-      <div style={{ backgroundColor: '#e7e9ef', marginLeft: '13px', opacity: '0.7', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '45px', height: '42px' }}>
+      <div  className=" iconresponsive" style={{ backgroundColor: '#e7e9ef', marginLeft: '13px', opacity: '0.7', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '45px', height: '42px' }}>
         <IoMdLock style={{ fontSize: '24px', fontWeight: 'bold' }} />
       </div>  
 
-      <div style={{ backgroundColor: '#e7e9ef', marginLeft: '13px', opacity: '0.7', borderRadius: '5px', display: 'flex', width: '200px', height: '42px' }}>
+      <div  className=" iconresponsive" style={{ backgroundColor: '#e7e9ef', marginLeft: '13px', opacity: '0.7', borderRadius: '5px', display: 'flex', width: '200px', height: '42px' }}>
         <p style={{ margin: 'auto' , color:'black'  , fontWeight:'bold'}}>Assign to Profile</p>
       </div>
-      <div style={{ backgroundColor: '#e7e9ef', marginLeft: '13px', opacity: '0.7', borderRadius: '5px', display: 'flex', width: '200px', height: '42px' }}>
+      <div className=" iconresponsive"style={{ backgroundColor: '#e7e9ef', marginLeft: '13px', opacity: '0.7', borderRadius: '5px', display: 'flex', width: '200px', height: '42px' }}>
         <p style={{ margin: 'auto' , color:'black'  , fontWeight:'bold'}}>Assign to Group</p>
       </div>
 
 
-      <div style={{ backgroundColor: '#e7e9ef', marginLeft: '13px', opacity: '0.7', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '45px', height: '42px' }}>
+      <div className=" iconresponsive"style={{ backgroundColor: '#e7e9ef', marginLeft: '13px', opacity: '0.7', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '45px', height: '42px' }}>
         < BsThreeDotsVertical style={{ fontSize: '24px', fontWeight: 'bold' }} />
       </div> 
 
 
 
-      <div style={{ display: "flex" }}>
+      <div className=" iconresponsive" style={{ display: "flex" }}>
       <p style={{ color: 'grey', marginLeft: '10px', marginTop: '10px', textDecoration: 'underline', cursor: 'pointer' }} onClick={handleUnselect}>
     Unselect all
   </p>
@@ -278,7 +280,7 @@ const handleAddUser = () => {
         </div>
 
 
-        <div style={{ position: 'absolute', backgroundColor: '#e7e9ef', left: '95%', transform: 'translateX(-50%)', opacity: '0.7', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '45px', height: '42px' }}>
+        <div className=" install" style={{ backgroundColor: '#e7e9ef', opacity: '0.7',  marginLeft: '235px',borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '45px', height: '42px' }}>
     <BiSolidDownload style={{ fontSize: '24px', fontWeight: 'bold' }} />
 </div>
 
@@ -289,10 +291,10 @@ const handleAddUser = () => {
 
 
 
-            <table className="table custom-table" >
+            <table className="table custom-table" style={{ width:'100%'}} >
             <thead style={{backgroundColor: "#f2f4f8" , height:'60px'}}>
-                <tr >
-                  <th scope="col" style={{ width:'50px'}} >
+                <tr style={{ width:'100%'}}>
+                  <th scope="col"  >
                     <label class="control control--checkbox" style={{ marginLeft:'15px'}}>
                       <input type="checkbox" class="js-check-all" />
                       <div class="control__indicator"></div>
@@ -312,7 +314,7 @@ const handleAddUser = () => {
               {users.map((user, index) => (
 
 
-                <><tr key={index}>
+                <><tr key={index} style={{ width:'100%'}}>
                   <th scope="row">
                   <label className="control control--checkbox" style={{ marginLeft:'15px'}}>
           <input type="checkbox" onChange={() => handleCheckboxChange(index)} />
