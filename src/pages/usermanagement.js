@@ -2,11 +2,8 @@ import React, { useState, useEffect } from "react";
 
 import { GoSearch } from "react-icons/go";
 import { MdModeEditOutline} from "react-icons/md";
-import { MdNotInterested} from "react-icons/md";
 
 import { IoMdLock} from "react-icons/io";
-import { BsThreeDotsVertical} from "react-icons/bs";
-import { BiSolidDownload} from "react-icons/bi";
 import { BiPlus} from "react-icons/bi";
 import { TiTick } from "react-icons/ti";
 import axios from 'axios';
@@ -106,8 +103,8 @@ const [showAddUserScreen, setShowAddUserScreen] = useState(false);
 const [newUserName, setNewUserName] = useState('');
 const [newUserUsername, setNewUserUsername] = useState('');
 const [newUserEmail, setNewUserEmail] = useState('');
-const [newUserGroup, setNewUserGroup] = useState('');
-const [newUserStatus, setNewUserStatus] = useState('');
+const [newUserGroup, setNewUserGroup] = useState('Any');
+const [newUserStatus, setNewUserStatus] = useState('Any');
 
 
 useEffect(() => {
@@ -122,15 +119,14 @@ useEffect(() => {
     });
 }, []);
 
-
 const handleAddUser = () => {
   const newUser = {
     newUserName,
     newUserUsername,
     newUserEmail,
-  newUserGroup,
+    newUserGroup,
     newUserStatus,
-    createdOn: new Date().toLocaleDateString()
+    createdOn: new Date().toISOString().split('T')[0],
   };
 
   // Use Axios to send a POST request to your server to add a new user
@@ -138,9 +134,20 @@ const handleAddUser = () => {
     .then(response => {
       // Update the local state with the new user
       setUsers([...users, response.data]);
+      // Reset the form fields
+      resetForm();
     })
     .catch(error => {
       console.error('Error adding new user:', error);
+
+      // Check if the error is due to the user already existing
+      if (error.response && error.response.status === 401) {
+        // Show an alert for user existence
+        alert('User already exists. Please choose a different username.');
+      } else {
+        // Show a generic error alert for other errors
+        alert('Error adding new user. Please try again later.');
+      }
     });
 
   // Clear the input fields and close the add user screen
@@ -154,16 +161,60 @@ const handleAddUser = () => {
 
 
 
+const [searchParams, setSearchParams] = useState({
+  newUserIdentifier: '',
+  newUserGroup: 'Any',
+  newUserStatus: 'Any',
+  createdOn: '',
+});
+
+const resetForm = () => {
+  setNewUserName('');
+  setNewUserUsername('');
+  setNewUserEmail('');
+  setNewUserGroup('');
+  setNewUserStatus('');
+};
+
+
+
+
+
+const handleSearch = () => {
+  // Extract the search parameters from the state
+  const { newUserIdentifier, newUserGroup, newUserStatus, createdOn } = searchParams;
+
+  // Construct the search query based on the selected filters
+  const queryParams = {
+    newUserIdentifier,
+    newUserGroup,
+    newUserStatus,
+    createdOn,
+  };
+  console.log('Sending request with newUserStatus:', newUserStatus);
+
+  // Make a request to the server to fetch the filtered users
+  axios.get('http://localhost:5000/users/search', { params: queryParams })
+    .then(response => {
+      console.log("Filtered User data:", response.data);
+      console.log('Received parameters:', newUserGroup, newUserStatus);
+
+      setUsers(response.data);
+    })
+
+    .catch(error => {
+      console.error('Error fetching filtered user data:', error);
+    });
+};
 
   return (
-    <div
+    <div 
       className={` content content-container ${
         showSidebar ? "hidden" : "visible"
       }`}
       
     >
-      <div class="container" style={{   backgroundColor: "#f2f4f8"
-    }}>
+      <div class="container" >
         <div style={{ display: "flex", alignItems: "center" }}>
           <h1 className="fw-bold">User Management</h1>
           <button className="userbtn" onClick={() => setShowAddUserScreen(true)}>
@@ -193,12 +244,36 @@ const handleAddUser = () => {
 
 <div style={{  display: "flex", marginLeft: '20px', flexDirection: "row", flexWrap: "wrap" }} >
   <div style={{ position:"relative",border: "1px solid #ccc", borderRadius: "8px", marginRight: "10px", marginBottom: "10px", width: '300px', height: '40px' }}>
-    <input type="text" placeholder="Search.." style={{position:"absolute", backgroundColor: "transparent",border: "none", outline: "none", padding: "10px 25px", fontSize: 17 }} />
+    <input type="text" placeholder="Search.." style={{position:"absolute", backgroundColor: "transparent",border: "none", outline: "none", padding: "10px 25px", fontSize: 17 }}  
+    value={searchParams.newUserIdentifier}
+    onChange={(e) =>
+      setSearchParams({
+        ...searchParams,
+        newUserIdentifier: e.target.value,
+      })
+    } />
     <GoSearch style={{ position:"absolute",fontSize: 19, color: "#999", top:"50%",transform:"translateY(-50%)" }} />
   </div>
 
-  <div style={{ border: "1px solid #ccc", borderRadius: "8px", marginRight: "10px", marginBottom: "10px", width: '150px', height: '40px' }}>
-    <input type="text" placeholder="User Name" style={{ backgroundColor: "transparent",border: "none", outline: "none", paddingLeft: 25, paddingTop: 12, fontSize: 16 }} />
+  <div style={{ position: "relative", marginRight: "10px", marginBottom: "10px" }} className="userstate">
+    <div style={{ position: "absolute", top: "-8px", background: "#fff", paddingLeft: "19px", color: 'rgb(117 117 117)',width:"94px", height:"10px" }}>
+      User Group
+    </div>
+    <div style={{ border: "1px solid #ccc", borderRadius: "8px", width: '200px', height: '40px' }}>
+      <select style={{ backgroundColor: "transparent",border: "none", outline: "none", padding: "5px 10px", fontSize: 16, width: '100%', height: '100%' }} 
+    value={searchParams.newUserGroup}
+    onChange={(e) =>
+      setSearchParams({
+        ...searchParams,newUserGroup: e.target.value,
+      })
+    }>
+        <option value="">Any</option>
+        <option value="Office">Office</option>
+        <option value="Managers">Managers</option>
+        <option value="Head Office">Head Office</option>
+        {/* Add more options as needed */}
+      </select>
+    </div>
   </div>
 
   <div style={{ position: "relative", marginRight: "10px", marginBottom: "10px" }} className="userstate">
@@ -206,11 +281,17 @@ const handleAddUser = () => {
       User Status
     </div>
     <div style={{ border: "1px solid #ccc", borderRadius: "8px", width: '200px', height: '40px' }}>
-      <select style={{ backgroundColor: "transparent",border: "none", outline: "none", padding: "5px 10px", fontSize: 16, width: '100%', height: '100%' }}>
-        <option value="user1">Any</option>
-        <option value="user2">Office</option>
-        <option value="user3">Managers</option>
-        <option value="user3">Head Office</option>
+      <select style={{ backgroundColor: "transparent",border: "none", outline: "none", padding: "5px 10px", fontSize: 16, width: '100%', height: '100%' }}   
+      value={searchParams.newUserStatus}
+      onChange={(e) =>
+        setSearchParams({
+          ...searchParams,newUserStatus: e.target.value,
+        })
+      }>
+        <option value="">Any</option>
+        <option value="Active">Active</option>
+        <option value="Inactive">Inactive</option>
+        <option value="Blocked">Blocked</option>
         {/* Add more options as needed */}
       </select>
     </div>
@@ -221,13 +302,19 @@ const handleAddUser = () => {
       Creation Date
     </div>
     <div style={{ border: "1px solid #ccc", borderRadius: "8px", width: '172px', height: '40px' }}>
-      <input type="date" style={{ backgroundColor: "transparent",border: "none", outline: "none", padding: "5px 10px", fontSize: 16, height: '100%' }} />
+      <input type="date" style={{ backgroundColor: "transparent",border: "none", outline: "none", padding: "5px 10px", fontSize: 16, height: '100%' }}
+     value={searchParams.createdOn}
+     onChange={(e) =>
+       setSearchParams({
+         ...searchParams,
+         createdOn: e.target.value,
+       })
+     } />
     </div>
   </div>
+  <button onClick={handleSearch} className="userbtn4">Search</button>
 
-  <div style={{ marginLeft: '20px', marginTop: '10px', color: 'blue', fontSize: '18px' }}>
-    All Filters
-  </div>
+
 </div>
 
 
@@ -250,10 +337,7 @@ const handleAddUser = () => {
         <MdModeEditOutline style={{ fontSize: '24px', fontWeight: 'bold' }}/>
       </div>
 
-      <div  className=" iconresponsive" style={{ backgroundColor: '#e7e9ef', marginLeft: '13px', opacity: '0.7', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '45px', height: '42px' }}>
-        <MdNotInterested style={{ fontSize: '24px', fontWeight: 'bold' }}/>
-      </div>
-  
+    
       <div  className=" iconresponsive" style={{ backgroundColor: '#e7e9ef', marginLeft: '13px', opacity: '0.7', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '45px', height: '42px' }}>
         <IoMdLock style={{ fontSize: '24px', fontWeight: 'bold' }} />
       </div>  
@@ -266,9 +350,7 @@ const handleAddUser = () => {
       </div>
 
 
-      <div className=" iconresponsive"style={{ backgroundColor: '#e7e9ef', marginLeft: '13px', opacity: '0.7', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '45px', height: '42px' }}>
-        < BsThreeDotsVertical style={{ fontSize: '24px', fontWeight: 'bold' }} />
-      </div> 
+    
 
 
 
@@ -280,12 +362,7 @@ const handleAddUser = () => {
         </div>
 
 
-        <div className=" install" style={{ backgroundColor: '#e7e9ef', opacity: '0.7',  marginLeft: '235px',borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '45px', height: '42px' }}>
-    <BiSolidDownload style={{ fontSize: '24px', fontWeight: 'bold' }} />
-</div>
-
-
-    
+  
 
   </div>
 
@@ -441,7 +518,7 @@ const handleAddUser = () => {
 
       <div style={{ display: 'flex', width: '100%' , marginTop: '20px' }}>
 
-      <p style={{ color: 'grey', textDecoration: 'underline', cursor: 'pointer',margintop:'7px' ,marginRight:'auto'}} >
+      <p style={{ color: 'grey', textDecoration: 'underline', cursor: 'pointer',margintop:'7px' ,marginRight:'auto'}}  onClick={resetForm}>
         Reset Fields
       </p>
         <div>

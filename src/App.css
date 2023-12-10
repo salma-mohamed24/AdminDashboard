@@ -28,7 +28,7 @@ header {
 
 .container{
   position: relative; /* Container needs a position value */
-
+ 
 }
 
 
@@ -64,6 +64,19 @@ header {
   margin-right: 11px;
 
 }
+
+.userbtn4{
+  background-color: rgb(34 165 101);
+  border:none;
+  font-size: 15px;
+  color: #ffffff;
+  width: 60px;
+  height: 40px;
+  border-radius: 9px;
+
+  
+}
+
 
 
 
@@ -245,10 +258,12 @@ a {
     text-decoration: none !important; }
 
 .container {
-  padding-bottom:325px;
   padding-left:20px ;
   padding-right: 20px;
+  background-color: #f2f4f8;
+   height:100vh;
 
+        
  }
 
 h2 {
@@ -448,6 +463,19 @@ th{
 .tr{
   width: 100%;
 }
+.sidenav{
+  overflow-y: auto; /* Add a vertical scrollbar when the content overflows */
+
+
+}
+.sidenav::-webkit-scrollbar {
+  width: 0px;
+}
+
+
+
+
+
 }
 
 
@@ -496,4 +524,14 @@ th{
 .tr{
   width: 100%;
 }
+
+.sidenav{
+  overflow-y: auto; /* Add a vertical scrollbar when the content overflows */
+
+
+}
+.sidenav::-webkit-scrollbar {
+  width: 0px;
+}
+
 }
