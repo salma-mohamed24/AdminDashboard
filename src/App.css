@@ -151,34 +151,6 @@ margin-right: 30px;
   left: 0;
 }
 
-.logo{
-  width: 127px;
-  height: 170px;
-  margin-left: 40px;
-  margin-top: -30px;
-  z-index: 1;
-}
-.search-bar {
-
-  display: flex;
-  align-items: center;
-}
-
-.search-bar input {
-  width: calc(100% - 10%);
-  padding: 8px;
-  border: none;
-  border-radius: 18px;
-  background-color: #ffffff;
-  outline: none;
-  height: 23px;
-
-}
-
-.search-icon {
-  margin-left: -25px; /* Adjust as needed */
-  cursor: pointer;
-}
 
 
 

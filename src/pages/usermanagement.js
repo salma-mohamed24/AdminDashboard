@@ -2,10 +2,13 @@ import React, { useState, useEffect } from "react";
 
 import { GoSearch } from "react-icons/go";
 import { MdModeEditOutline} from "react-icons/md";
+import { FaCheck, FaTimes } from 'react-icons/fa';
 
 import { IoMdLock} from "react-icons/io";
 import { BiPlus} from "react-icons/bi";
 import { TiTick } from "react-icons/ti";
+import { MdDelete } from "react-icons/md";
+
 import axios from 'axios';
 
 
@@ -107,17 +110,33 @@ const [newUserGroup, setNewUserGroup] = useState('Any');
 const [newUserStatus, setNewUserStatus] = useState('Any');
 
 
+
+
 useEffect(() => {
   console.log("Fetching user data...");
   axios.get('http://localhost:5000/users/get-users')
     .then(response => {
       console.log("User data:", response.data);
-      setUsers(response.data);
+
+      // Format date before setting it in the state
+      const formattedUsers = response.data.map(user => ({
+        ...user,
+        // Assuming your timestamp field is named 'createdOn'
+        createdOn: formatDate(user.createdOn),
+      }));
+
+      setUsers(formattedUsers);
     })
     .catch(error => {
       console.error('Error fetching user data:', error);
     });
 }, []);
+
+// Helper function to format the timestamp to a readable date
+const formatDate = (timestamp) => {
+  const options = { year: 'numeric', month: 'numeric', day: '2-digit' };
+  return new Date(Number(timestamp)).toLocaleString('en-US', options);
+};
 
 const handleAddUser = () => {
   const newUser = {
@@ -126,7 +145,7 @@ const handleAddUser = () => {
     newUserEmail,
     newUserGroup,
     newUserStatus,
-    createdOn: new Date().toISOString().split('T')[0],
+    createdOn: new Date(),
   };
 
   // Use Axios to send a POST request to your server to add a new user
@@ -199,13 +218,60 @@ const handleSearch = () => {
       console.log("Filtered User data:", response.data);
       console.log('Received parameters:', newUserGroup, newUserStatus);
 
-      setUsers(response.data);
+      // Format date before setting it in the state
+      const formattedUsers = response.data.map(user => ({
+        ...user,
+        createdOn: formatDate(user.createdOn),
+      }));
+
+      setUsers(formattedUsers);
     })
 
     .catch(error => {
       console.error('Error fetching filtered user data:', error);
     });
 };
+
+
+
+
+
+
+
+const [editableUserIndex, setEditableUserIndex] = useState(null);
+
+  const handleEditUser = (index) => {
+    // Enable inline editing for the selected user
+    setEditableUserIndex(index);
+  };
+
+  const handleSaveUser = (index) => {
+    // Perform the update operation using Axios or your preferred method
+    const updatedUser = users[index];
+    axios.put(`http://localhost:5000/users/update/${updatedUser.id}`, updatedUser)
+      .then(response => {
+        // Handle the successful update
+        console.log('User updated successfully:', response.data);
+
+        // Disable inline editing after saving
+        setEditableUserIndex(null);
+      })
+      .catch(error => {
+        // Handle the update error
+        console.error('Error updating user:', error);
+
+        // You may want to show an error message to the user
+      });
+  };
+
+  const handleCancelEdit = () => {
+    // Disable inline editing without saving changes
+    setEditableUserIndex(null);
+  };
+
+
+
+
 
   return (
     <div 
@@ -333,14 +399,11 @@ const handleSearch = () => {
 
      <div style={{ borderLeft: '1.5px solid rgb(221 211 211)', height: '35px', marginLeft:'15px' ,marginTop:'3px'}}></div>
 
-      <div  className=" iconresponsive" style={{ backgroundColor: '#e7e9ef', marginLeft: '20px', opacity: '0.7', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '45px', height: '42px' }}>
-        <MdModeEditOutline style={{ fontSize: '24px', fontWeight: 'bold' }}/>
-      </div>
-
     
       <div  className=" iconresponsive" style={{ backgroundColor: '#e7e9ef', marginLeft: '13px', opacity: '0.7', borderRadius: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '45px', height: '42px' }}>
-        <IoMdLock style={{ fontSize: '24px', fontWeight: 'bold' }} />
+        <MdDelete style={{ fontSize: '24px', fontWeight: 'bold' }} />
       </div>  
+
 
       <div  className=" iconresponsive" style={{ backgroundColor: '#e7e9ef', marginLeft: '13px', opacity: '0.7', borderRadius: '5px', display: 'flex', width: '200px', height: '42px' }}>
         <p style={{ margin: 'auto' , color:'black'  , fontWeight:'bold'}}>Assign to Profile</p>
@@ -384,6 +447,8 @@ const handleSearch = () => {
                   <th scope="col" style={{textAlign:'center'}}>Group</th>
                   <th scope="col">Status</th>
                   <th scope="col">Created on</th>
+                  <th scope="col"></th>
+
                 </tr>
               </thead>
 
@@ -400,27 +465,126 @@ const handleSearch = () => {
           </div>
         </label>
                   </th>
+                  
+                  
                   <td>
+                  {editableUserIndex === index ? (
+                  <input
+                  style={{  outline: "none" , borderRadius: "5px", height: '11px' ,padding: '12px' , width: '150px', marginLeft:"5px"}}
+                    type="text"
+                    value={user.newUserName}
+                    onChange={(e) => {
+                      const updatedUsers = [...users];
+                      updatedUsers[index].newUserName = e.target.value;
+                      setUsers(updatedUsers);
+                    }}
+                  />
+                ) : (
                     <div style={{ display: "flex", alignItems: "center"  , paddingLeft:'10px'}}>
                       <div class="userCircle" style={{ backgroundColor: getCircleColor(user.newUserName) }}>
                         {getInitials(user.newUserName)}
                       </div>
                       <p style={{ marginLeft: "10px", color: 'black' }}>{user.newUserName}</p>
                     </div>
+                     )}
                   </td>
-                  <td>{user.newUserUsername}</td>
-              <td>{user.newUserEmail}</td>
-              <td style={{textAlign:'center'}}>{user.newUserGroup}</td>
+
+              <td>
+              {editableUserIndex === index ? (
+                  <input
+                  style={{  outline: "none" , borderRadius: "5px", height: '11px' ,padding: '12px' , width: '150px'}}
+                    type="text"
+                    value={user.newUserUsername}
+                    onChange={(e) => {
+                      const updatedUsers = [...users];
+                      updatedUsers[index].newUserUsername = e.target.value;
+                      setUsers(updatedUsers);
+                    }}
+                  />
+                ) : (
+                <p style={{ color: 'black' }}>
+                {user.newUserUsername}
+                </p>
+                )}
+
+                </td>
+
+
+                <td>
+              {editableUserIndex === index ? (
+                  <input
+                  style={{  outline: "none" , borderRadius: "5px", height: '11px' ,padding: '12px' , width: '150px'}}
+                    type="text"
+                    value={user.newUserEmail}
+                    onChange={(e) => {
+                      const updatedUsers = [...users];
+                      updatedUsers[index].newUserEmail = e.target.value;
+                      setUsers(updatedUsers);
+                    }}
+                  />
+                ) : (
+                <p style={{ color: 'black' }}>
+                {user.newUserEmail}
+                </p>
+                )}
+
+                </td>
+
+                
+              <td style={{textAlign:'center'}}>
+              {editableUserIndex === index ? (
+
+<select value={user.newUserGroup}  
+   onChange={(e) => 
+     {
+       const updatedUsers = [...users];
+       updatedUsers[index].newUserGroup = e.target.value;
+       setUsers(updatedUsers);
+     handleStatusChange(index, e)
+   } }
+   style={{ border: 'none', outline: 'none', background: 'transparent' }}>
+
+ <option value="Office">Office</option>
+  <option value="Managers">Managers</option>
+  <option value="Head Office">Head Office</option>
+  </select>
+  ) : (
+                user.newUserGroup
+                )}
+                </td>
 
                   <td>
-                     <select value={user.newUserStatus}     onChange={(e) => handleStatusChange(index, e)} style={{ border: 'none', outline: 'none', width: '100%', background: 'transparent' }}>
+                  {editableUserIndex === index ? (
+
+                     <select value={user.newUserStatus}  
+                        onChange={(e) => 
+                          {
+                            const updatedUsers = [...users];
+                            updatedUsers[index].newUserStatus = e.target.value;
+                            setUsers(updatedUsers);
+                          handleStatusChange(index, e)
+                        } }
+                        style={{ border: 'none', outline: 'none', background: 'transparent' }}>
                      <option value="Active">Active</option>
                       <option value="Inactive">Inactive</option>
                       <option value="Blocked">Blocked</option>
                        </select>
+                       ) : (
+                        user.newUserStatus
+                      )}
                   </td>
 
                 <td>{user.createdOn}</td>
+                <td>
+                {editableUserIndex === index ? (
+                  <>
+                   <FaCheck onClick={() => handleSaveUser(index)} style={{ cursor: 'pointer', marginRight: '5px' }} />
+                    <FaTimes onClick={handleCancelEdit} style={{ cursor: 'pointer' }} />
+                  </>
+                ) : (
+                  <MdModeEditOutline onClick={() => handleEditUser(index)} />
+                )}
+              </td>
                 </tr>
               
                   </>
@@ -533,6 +697,7 @@ const handleSearch = () => {
     </div>
   </div>
 )}
+
 
 
 

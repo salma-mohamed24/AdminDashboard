@@ -3,7 +3,6 @@ import { IoIosArrowDown } from "react-icons/io";
 import { BiSolidDashboard } from "react-icons/bi";
 import { GoSearch } from "react-icons/go";
 
-import logo from "./logo-1.png";
 
 const Sidebar = ({ show }) => {
   const [userManagementExpanded, setUserManagementExpanded] = useState(false);
@@ -14,21 +13,13 @@ const Sidebar = ({ show }) => {
 
   return (
     <div className={show ? "sidenav active" : "sidenav"} style={{ display: "flex", flexDirection: "column" }}>
-    <div style={{ order: 1 }}>
-      <img src={logo} alt="logo" className="logo" />
-    </div>
-    <div style={{ order: 2 , marginTop:'-50px'}}>
-      <div className="search-bar">
-        {/* Your search bar JSX goes here */}
-        <input type="text" placeholder="Quick access" />
-        <GoSearch className="search-icon" />
-      </div>
-    </div>
     
-    <ul style={{ order: 3 , width: '100%' }}>
+  
+    
+    <ul style={{ width: '100%' }}>
         <li style={{  width: '100%' }}>
-             <a>
-            <BiSolidDashboard />
+             <a style={{color:"white"}}>
+            <BiSolidDashboard style={{color:"white"}}/>
             Dashboard
           </a>
         </li>
