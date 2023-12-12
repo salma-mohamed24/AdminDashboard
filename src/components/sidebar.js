@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import { BiSolidDashboard } from "react-icons/bi";
-import { GoSearch } from "react-icons/go";
 
 
 const Sidebar = ({ show }) => {
