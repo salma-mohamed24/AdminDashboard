@@ -10,6 +10,8 @@ import axios from "axios";
 import { IoMdClose } from "react-icons/io";
 
 const Usermanagement = (showSidebar) => {
+  const [originalUsers, setOriginalUsers] = useState([]);
+
   const [selectedCount, setSelectedCount] = useState(0);
   const [selectAllText, setSelectAllText] = useState("Select All");
   const [selectedUserIds, setSelectedUserIds] = useState([]);
@@ -120,25 +122,22 @@ const Usermanagement = (showSidebar) => {
   };
 
   useEffect(() => {
-    console.log("Fetching user data...");
+    // Fetch the latest user data after adding a user
     axios
       .get("http://localhost:5000/users/get-users")
       .then((response) => {
-        console.log("User data:", response.data);
-
-        // Format date before setting it in the state
         const formattedUsers = response.data.map((user) => ({
           ...user,
-          // Assuming your timestamp field is named 'createdOn'
           createdOn: formatDate(user.createdOn),
         }));
-
         setUsers(formattedUsers);
+        setOriginalUsers(formattedUsers); // Store the original data
+
       })
       .catch((error) => {
         console.error("Error fetching user data:", error);
       });
-  }, []);
+  }, [key]); // Include 'key' as a dependency to trigger the effect when it changes
 
   // Helper function to format the timestamp to a readable date
   const formatDate = (timestamp) => {
@@ -165,6 +164,7 @@ const Usermanagement = (showSidebar) => {
         resetForm();
         // Force a re-render by updating the component key
         setShowAddUserScreen(false);
+        
         setKey((prevKey) => prevKey + 1);
       })
       .catch((error) => {
@@ -177,6 +177,7 @@ const Usermanagement = (showSidebar) => {
         }
       });
   };
+  
 
   const [searchParams, setSearchParams] = useState({
     newUserIdentifier: "",
@@ -253,6 +254,8 @@ const Usermanagement = (showSidebar) => {
   };
 
   const handleCancelEdit = () => {
+     // Reset the users' state to the original state
+     setUsers(originalUsers);
     // Disable inline editing without saving changes
     setEditableUserIndex(null);
   };
@@ -354,7 +357,7 @@ const Usermanagement = (showSidebar) => {
                   >
                     <option value="">Any</option>
                     <option value="Office">Office</option>
-                    <option value="Managers">Manager</option>
+                    <option value="Manager">Manager</option>
                     <option value="Head Office">Head Office</option>
                     {/* Add more options as needed */}
                   </select>
@@ -566,7 +569,7 @@ const Usermanagement = (showSidebar) => {
                             }}
                           >
                             <option value="Office">Office</option>
-                            <option value="Managers">Managers</option>
+                            <option value="Manager">Manager</option>
                             <option value="Head Office">Head Office</option>
                           </select>
                         ) : (
@@ -714,7 +717,7 @@ const Usermanagement = (showSidebar) => {
                 >
                   <option value="">Choose User Group</option>
                   <option value="Office">Office</option>
-                  <option value="Managers">Manager</option>
+                  <option value="Manager">Manager</option>
                   <option value="Head Office">Head Office</option>
                 </select>
               </div>

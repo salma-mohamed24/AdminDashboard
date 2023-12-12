@@ -86,10 +86,10 @@ function Header({ onToggleNav, showSidebar }) {
           <div style={{ borderLeft: '2px solid rgb(221 211 211)', height: '30px', marginLeft: '15px' }}></div>
 
           <div style={{ display: "flex" }}>
-            <p style={{ marginLeft: "10px", color: 'black', fontWeight: 'bold', marginTop: '3px' }}>Nader Amer</p>
+            <p style={{ marginLeft: "10px", color: 'black', fontWeight: 'bold', marginTop: '3px' }}>Salma Mohamed</p>
 
-            <div class="userCircle" style={{ backgroundColor: getCircleColor("Nader Amer"), marginLeft: '4px' }}>
-              {getInitials("Nader Amer")}
+            <div class="userCircle" style={{ backgroundColor: getCircleColor("Salma Mohamed"), marginLeft: '4px' }}>
+              {getInitials("Salma Mohamed")}
             </div>
           </div>
           <MdKeyboardArrowDown style={{ fontSize: '24px', fontWeight: 'bold', marginTop: '4px' }} />
