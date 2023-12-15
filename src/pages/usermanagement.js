@@ -435,6 +435,7 @@ const Usermanagement = (showSidebar) => {
                 </p>
               </div>
             </div>
+            <div style={{overflowX:'auto'}}>
 
             <table className="table custom-table" style={{ width: "100%" }}>
               <thead style={{ backgroundColor: "#f2f4f8", height: "60px" }}>
@@ -627,6 +628,8 @@ const Usermanagement = (showSidebar) => {
                 ))}
               </tbody>
             </table>
+            </div>
+
           </div>
         </div>
       </div>
